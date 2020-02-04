@@ -1,17 +1,30 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+
+    <b-container class="bv-example-row">
+      <b-row class="justify-content-md-center">
+        <b-col></b-col>
+        <b-col md="auto">
+
+          <b-jumbotron bg-variant="info" text-variant="white" border-variant="dark" header="Pomodoro Timer">
+
+          </b-jumbotron>
+          <Timer />
+
+        </b-col>
+        <b-col></b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Timer from './components/Timer.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    Timer
   }
 }
 </script>
