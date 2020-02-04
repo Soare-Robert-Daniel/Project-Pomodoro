@@ -6,7 +6,7 @@
                 <b-badge variant="light">{{time}}</b-badge>
             </template>
             <hr class="my-4">
-            <div>
+            <div class="options">
                 <h3>Options</h3>
                 <b-form-checkbox
                         id="checkbox-1"
@@ -17,6 +17,7 @@
                 >
                     Auto Start
                 </b-form-checkbox>
+
             </div>
         </b-jumbotron>
 
@@ -41,6 +42,22 @@
             </b-button-group>
         </div>
 
+        <div class="mt-3">
+            <b-card-group deck>
+                <b-card bg-variant="info" text-variant="white" header="Work" class="text-center">
+                    <b-form-input v-model="workTime" @change="timeChangeBeforeStartHandler" type="number" min="0" max="30"></b-form-input>
+                </b-card>
+
+                <b-card bg-variant="warning" text-variant="white" header="Short Break" class="text-center">
+                    <b-form-input v-model="shortBreakTime" @change="timeChangeBeforeStartHandler" type="number" min="0" max="30"></b-form-input>
+                </b-card>
+
+                <b-card bg-variant="danger" text-variant="white" header="Long Break" class="text-center">
+                    <b-form-input  v-model="longBreakTime" @change="timeChangeBeforeStartHandler" type="number" min="0" max="30"></b-form-input>
+                </b-card>
+            </b-card-group>
+        </div>
+
     </div>
 </template>
 
@@ -49,73 +66,30 @@
         name: "Timer",
         data() {
             return {
-                /*
                 periods: [
                     {
-                        type: "Work",
-                        limit: 25
+                        type: "work",
                     },
                     {
-                        type: "Short Break",
-                        limit: 5
+                        type: "short_break",
                     },
                     {
-                        type: "Work",
-                        limit: 25
+                        type: "work",
                     },
                     {
-                        type: "Short Break",
-                        limit: 5
+                        type: "short_break",
                     },
                     {
-                        type: "Work",
-                        limit: 25
+                        type: "work",
                     },
                     {
-                        type: "Short Break",
-                        limit: 5
+                        type: "short_break",
                     },
                     {
-                        type: "Work",
-                        limit: 25
+                        type: "work",
                     },
                     {
-                        type: "Long Break",
-                        limit: 30
-                    },
-                ], */
-                periods: [
-                    {
-                        type: "Work",
-                        limit: 1
-                    },
-                    {
-                        type: "Short Break",
-                        limit: 1
-                    },
-                    {
-                        type: "Work",
-                        limit: 1
-                    },
-                    {
-                        type: "Short Break",
-                        limit: 1
-                    },
-                    {
-                        type: "Work",
-                        limit: 1
-                    },
-                    {
-                        type: "Short Break",
-                        limit: 1
-                    },
-                    {
-                        type: "Work",
-                        limit: 1
-                    },
-                    {
-                        type: "Long Break",
-                        limit: 1
+                        type: "long_break",
                     },
                 ],
                 currentPeriod: 0,
@@ -125,7 +99,10 @@
                 autoStart: false,
                 isDone: true,
                 isPaused: false,
-                isNotStarted: true
+                isNotStarted: true,
+                workTime: 25,
+                shortBreakTime: 5,
+                longBreakTime: 30
             }
         },
         created: function () {
@@ -186,11 +163,28 @@
                 clearInterval(this.timer);
             },
             resetTimer: function () {
-                this.currentTime = this.periods[this.currentPeriod].limit * 60;
+                this.currentTime = this.getPeriodLimit(this.periods[this.currentPeriod].type) * 60;
             },
             deleteTimer: function () {
                 this.stopTimer();
                 this.timer = null;
+            },
+            getPeriodLimit: function(type) {
+                if(type === "short_break") {
+                    return this.shortBreakTime;
+                } else if(type === "long_break") {
+                    return this.longBreakTime;
+                } else if(type === "work") {
+                    return this.workTime;
+                }
+                
+                return -1;
+            },
+            timeChangeBeforeStartHandler: function() {
+                if(this.isNotStarted) {
+                    this.resetTimer();
+                    this.updateTime();
+                }
             }
 
         }
@@ -199,4 +193,8 @@
 
 <style scoped>
 
+    .options {
+        text-align: left;
+    }
+    
 </style>
