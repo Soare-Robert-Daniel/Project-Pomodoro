@@ -2,7 +2,7 @@
     <div>
 
         <b-jumbotron bg-variant="dark" text-variant="white" border-variant="dark">
-            <template v-slot:header>{{periods[currentPeriod].type}}
+            <template v-slot:header>{{periods[currentPeriod].msg}}
                 <b-badge variant="light">{{time}}</b-badge>
             </template>
             <hr class="my-4">
@@ -26,7 +26,8 @@
                 <b-icon-stopwatch font-scale="5" v-b-tooltip.hover title="Begin"></b-icon-stopwatch>
             </b-button>
             <b-button v-else v-on:click="next" pill variant="primary" v-b-tooltip.hover title="Start the next cycle">
-                <h1> Next </h1></b-button>
+                <h1> Next </h1>
+            </b-button>
         </div>
         <div v-else>
             <b-button-group>
@@ -69,27 +70,35 @@
                 periods: [
                     {
                         type: "work",
+                        msg: "Work"
                     },
                     {
                         type: "short_break",
+                        msg: "Short Break"
                     },
                     {
                         type: "work",
+                        msg: "Work"
                     },
                     {
                         type: "short_break",
+                        msg: "Short Break"
                     },
                     {
                         type: "work",
+                        msg: "Work"
                     },
                     {
                         type: "short_break",
+                        msg: "Short Break"
                     },
                     {
                         type: "work",
+                        msg: "Work"
                     },
                     {
                         type: "long_break",
+                        msg: "Long Break"
                     },
                 ],
                 currentPeriod: 0,
@@ -102,7 +111,8 @@
                 isNotStarted: true,
                 workTime: 25,
                 shortBreakTime: 5,
-                longBreakTime: 30
+                longBreakTime: 30,
+                toastDelayTimeMin: 5 * 60 * 1000
             }
         },
         created: function () {
@@ -144,6 +154,7 @@
                         if (this.currentTime === 0) {
                             this.stopTimer();
                             this.isDone = true;
+                            this.makeToast();
                             if (this.autoStart) {
                                 this.next();
                             }
@@ -177,7 +188,6 @@
                 } else if(type === "work") {
                     return this.workTime;
                 }
-                
                 return -1;
             },
             timeChangeBeforeStartHandler: function() {
@@ -185,8 +195,13 @@
                     this.resetTimer();
                     this.updateTime();
                 }
+            },
+            makeToast() {
+                this.$bvToast.toast(`The cycle has finished!`, {
+                    title: "Finished",
+                    autoHideDelay: this.toastDelayTimeMin,
+                })
             }
-
         }
     }
 </script>
